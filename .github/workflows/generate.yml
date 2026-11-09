@@ -39,7 +39,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          python generate.py \
+          python GENERATE.PY \
             --topic "${{ inputs.topic }}" \
             --slides "${{ inputs.slides }}" \
             --language "${{ inputs.language }}"
