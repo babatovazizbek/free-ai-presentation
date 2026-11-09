@@ -1,0 +1,51 @@
+
+name: AI Presentation Generator
+
+on:
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: "Presentation topic"
+        required: true
+        type: string
+      slides:
+        description: "Number of slides"
+        required: true
+        default: "10"
+        type: string
+      language:
+        description: "Presentation language"
+        required: true
+        default: "Uzbek"
+        type: string
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install libraries
+        run: pip install -r requirements.txt
+
+      - name: Generate presentation
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python generate.py \
+            --topic "${{ inputs.topic }}" \
+            --slides "${{ inputs.slides }}" \
+            --language "${{ inputs.language }}"
+
+      - name: Save PowerPoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: AI-Presentation
+          path: presentation.pptx
